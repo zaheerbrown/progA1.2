@@ -1,0 +1,129 @@
+package org.example.test;
+
+import org.example.Assignment1PROG6112;
+import org.example.Assignment1PROG6112.StudentRecord;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class Assignment1PROG6112Test {
+
+    @BeforeEach
+    void setUp() {
+        // Clear the students list before each test to ensure a clean state
+        Assignment1PROG6112.getStudents().clear();
+
+        // Add a student to ensure the list is not empty
+        Assignment1PROG6112.saveStudent("S12345", "John Doe", 20, "john.doe@example.com", "Computer Science");
+    }
+
+    @Test
+    void TestSaveStudent() {
+        // Given
+        String id = "S67890";
+        String name = "Jane Smith";
+        int age = 22;
+        String email = "jane.smith@example.com";
+        String course = "Mathematics";
+
+        // When
+        Assignment1PROG6112.saveStudent(id, name, age, email, course);
+        StudentRecord student = Assignment1PROG6112.findStudentByID(id);
+
+        // Then
+        assertNotNull(student);
+        assertEquals(id, student.studentID);
+        assertEquals(name, student.name);
+        assertEquals(age, student.age);
+        assertEquals(email, student.email);
+        assertEquals(course, student.course);
+    }
+
+    @Test
+    void TestSearchStudent() {
+        // Given
+        String id = "S12345"; // ID of the student added in setUp()
+
+        // When
+        StudentRecord student = Assignment1PROG6112.findStudentByID(id);
+
+        // Then
+        assertNotNull(student);
+        assertEquals(id, student.studentID);
+    }
+
+    @Test
+    void TestSearchStudent_StudentNotFound() {
+        // Given
+        String nonExistentID = "S99999";
+
+        // When
+        StudentRecord student = Assignment1PROG6112.findStudentByID(nonExistentID);
+
+        // Then
+        assertNull(student);
+    }
+
+    @Test
+    void TestDeleteStudent() {
+        // Given
+        String id = "S12345"; // ID of the student added in setUp()
+
+        // When
+        Assignment1PROG6112.deleteStudent(id);
+        StudentRecord student = Assignment1PROG6112.findStudentByID(id);
+
+        // Then
+        assertNull(student);
+    }
+
+    @Test
+    void TestDeleteStudent_StudentNotFound() {
+        // Given
+        String nonExistentID = "S99999"; // ID that does not exist in the list
+
+        // When
+        int initialSize = Assignment1PROG6112.getStudents().size();
+        Assignment1PROG6112.deleteStudent(nonExistentID);
+
+        // Then
+        assertEquals(initialSize, Assignment1PROG6112.getStudents().size());
+    }
+
+    @Test
+    void TestStudentAge_StudentAgeValid() {
+        // Given
+        int validAge = 20;  // This is a valid age as per the criteria (16 or older)
+
+        // When
+        boolean isValid = Assignment1PROG6112.isAgeValid(validAge);
+
+        // Then
+        assertTrue(isValid);
+    }
+
+    @Test
+    void TestStudentAge_StudentAgeInvalid() {
+        // Given
+        int invalidAge = 15;  // This is an invalid age as per the criteria (must be 16 or older)
+
+        // When
+        boolean isValid = Assignment1PROG6112.isAgeValid(invalidAge);
+
+        // Then
+        assertFalse(isValid);
+    }
+
+    @Test
+    void TestStudentAge_StudentAgeInvalidCharacter() {
+        // Given
+        String invalidAgeInput = "abc";  // This is an invalid input that is not a number
+
+        // When
+        boolean isValid = Assignment1PROG6112.isAgeInputValid(invalidAgeInput);
+
+        // Then
+        assertFalse(isValid);
+    }
+}
+
